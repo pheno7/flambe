@@ -63,9 +63,9 @@ class Sprite extends Component
     public var blendMode :BlendMode;
 
     /**
-     * True if this sprite should be drawn.
+     * Whether this sprite should be drawn.
      */
-    public var visible (default, null) :Value<Bool>;
+    public var visible :Bool;
 
     /**
      * Emitted when the pointer is pressed down over this sprite.
@@ -92,12 +92,12 @@ class Sprite extends Component
         rotation = new AnimatedFloat(0, dirtyMatrix);
         scaleX = new AnimatedFloat(1, dirtyMatrix);
         scaleY = new AnimatedFloat(1, dirtyMatrix);
-
-        alpha = new AnimatedFloat(1);
         anchorX = new AnimatedFloat(0, dirtyMatrix);
         anchorY = new AnimatedFloat(0, dirtyMatrix);
-        visible = new Value<Bool>(true);
+
+        alpha = new AnimatedFloat(1);
         blendMode = null;
+        visible = true;
     }
 
     /**
@@ -142,6 +142,10 @@ class Sprite extends Component
         return _viewMatrix;
     }
 
+    /**
+     * Convenience method to set the anchor position.
+     * @returns This instance, for chaining.
+     */
     public function setAnchor (x :Float, y :Float) :Sprite
     {
         anchorX._ = x;
@@ -149,6 +153,10 @@ class Sprite extends Component
         return this;
     }
 
+    /**
+     * Convenience method to center the anchor.
+     * @returns This instance, for chaining.
+     */
     public function centerAnchor () :Sprite
     {
         anchorX._ = getNaturalWidth()/2;
@@ -156,6 +164,10 @@ class Sprite extends Component
         return this;
     }
 
+    /**
+     * Convenience method to set the position.
+     * @returns This instance, for chaining.
+     */
     public function setXY (x :Float, y :Float) :Sprite
     {
         this.x._ = x;
@@ -163,6 +175,10 @@ class Sprite extends Component
         return this;
     }
 
+    /**
+     * Convenience method to uniformly set the scale.
+     * @returns This instance, for chaining.
+     */
     public function setScale (scale :Float) :Sprite
     {
         scaleX._ = scale;
@@ -170,6 +186,10 @@ class Sprite extends Component
         return this;
     }
 
+    /**
+     * Convenience method to set the scale.
+     * @returns This instance, for chaining.
+     */
     public function setScaleXY (scaleX :Float, scaleY :Float) :Sprite
     {
         this.scaleX._ = scaleX;
@@ -250,7 +270,7 @@ class Sprite extends Component
         if (isMatrixDirty()) {
             var parentSprite = getParentSprite();
             var parentViewMatrix = if (parentSprite != null)
-                parentSprite.getViewMatrix() else IDENTITY;
+                parentSprite.getViewMatrix() else _identity;
             _viewMatrix.copyFrom(parentViewMatrix);
             _viewMatrix.translate(x._, y._);
             _viewMatrix.rotate(FMath.toRadians(rotation._));
@@ -307,7 +327,7 @@ class Sprite extends Component
         }
     }
 
-    private static var IDENTITY = new Matrix();
+    private static var _identity = new Matrix();
     private static var _scratchPoint = new Point();
 
     // All sprites that have input event listeners attached, in screen depth order.

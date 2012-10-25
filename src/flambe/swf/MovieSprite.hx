@@ -51,6 +51,11 @@ class MovieSprite extends Sprite
 
     public var totalFrames(get_totalFrames, null):Float;
 
+    /**
+     * Whether this movie is currently paused.
+     */
+    public var paused :Bool = false;
+
     public function new (symbol :MovieSymbol)
     {
         super();
@@ -124,13 +129,15 @@ class MovieSprite extends Sprite
         }
         speed.update(dt);
 
-        _position += speed._*dt;
-        if (_position > symbol.duration) {
-            _position = _position % symbol.duration;
-        }
+        if (!paused) {
+            _position += speed._*dt;
+            if (_position > symbol.duration) {
+                _position = _position % symbol.duration;
+            }
 
-        var newFrame = _position*symbol.frameRate;
-        goto(newFrame);
+            var newFrame = _position*symbol.frameRate;
+            goto(newFrame);
+        }
     }
     
 
@@ -289,7 +296,7 @@ private class LayerAnimator
 
         var kf = keyframes[keyframeIdx];
         var visible = kf.visible;
-        sprite.visible._ = visible;
+        sprite.visible = visible;
         if (!visible) {
             return; // Don't bother animating invisible layers
         }
@@ -319,12 +326,12 @@ private class LayerAnimator
             }
 
             var nextKf = keyframes[keyframeIdx + 1];
-            x += (nextKf.x-kf.x) * interp;
-            y += (nextKf.y-kf.y) * interp;
-            scaleX += (nextKf.scaleX-kf.scaleX) * interp;
-            scaleY += (nextKf.scaleY-kf.scaleY) * interp;
-            rotation += (nextKf.rotation-kf.rotation) * interp;
-            alpha += (nextKf.alpha-kf.alpha) * interp;
+            x += (nextKf.x-x) * interp;
+            y += (nextKf.y-y) * interp;
+            scaleX += (nextKf.scaleX-scaleX) * interp;
+            scaleY += (nextKf.scaleY-scaleY) * interp;
+            rotation += (nextKf.rotation-rotation) * interp;
+            alpha += (nextKf.alpha-alpha) * interp;
         }
 
         sprite.x._ = x;
