@@ -216,6 +216,39 @@ class MovieSprite extends Sprite
         speed._ = 1;
         goto(newFrame);
     }
+	
+	/**
+	 * Added width and height getters for current frame of a MovieSprite [OC]
+	 */
+	private function get_width():Float {
+		var width:Float = 0;
+		var frame:Int = cast _frame;
+		for (layer in symbol.layers) {
+			var bmpSymbol:BitmapSymbol = cast layer.keyframes[frame].symbol;
+			if (layer.keyframes[frame].x - layer.keyframes[frame].pivotX + bmpSymbol.width > width) {
+				width = layer.keyframes[frame].x - layer.keyframes[frame].pivotX * layer.keyframes[frame].scaleX + bmpSymbol.width * layer.keyframes[frame].scaleX;
+			}
+		}
+		return width;
+	}
+	
+	private function get_height():Float {
+		var height:Float = 0;
+		var frame:Int = cast _frame;
+		for (layer in symbol.layers) {
+			var bmpSymbol:BitmapSymbol = cast layer.keyframes[frame].symbol;
+			if (layer.keyframes[frame].y - layer.keyframes[frame].pivotY + bmpSymbol.height > height) {
+				height = layer.keyframes[frame].y - layer.keyframes[frame].pivotY * layer.keyframes[frame].scaleY + bmpSymbol.height * layer.keyframes[frame].scaleY;
+			}
+		}
+		return height;
+	}
+	
+	public var width(get_width, null):Float;
+	public var height(get_height, null):Float;
+	/**
+	 * Added width and height getters for current frame of a MovieSprite [OC] -- END
+	 */
 
     inline private function getPosition () :Float
     {
